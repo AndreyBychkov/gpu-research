@@ -49,7 +49,7 @@ int main(void) {
     float* d_A, * d_B, * d_C;
     cudaMalloc(&d_A, nr_rows_A * nr_cols_A * sizeof(float));
     cudaMalloc(&d_B, nr_rows_B * nr_cols_B * sizeof(float));
-    cudaMalloc(&d_B, nr_rows_B * nr_cols_B * sizeof(float));
+    cudaMalloc(&d_C, nr_rows_B * nr_cols_B * sizeof(float));
 
     GPU_fill_rand(d_A, nr_rows_A, nr_cols_A);
     GPU_fill_rand(d_B, nr_rows_B, nr_cols_B);
