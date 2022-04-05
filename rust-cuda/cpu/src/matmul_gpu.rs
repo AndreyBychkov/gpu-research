@@ -47,7 +47,7 @@ pub(crate) fn matmul_gpu(lhs: &Vec<f32>, rhs: &Vec<f32>) -> Result<Vec<f32>, Box
 
     stream.synchronize()?;
     let elapsed = start.elapsed();
-    println!("Spent on kernel = {}s", elapsed.as_secs_f32());
+    println!("Spent on kernel = {}s,\tPerf = {} Gflops", elapsed.as_secs_f32(), 2.0*1e-9* (N*N*N) as f32);
 
     out_buf.copy_to(&mut out)?;
     Ok(out)
