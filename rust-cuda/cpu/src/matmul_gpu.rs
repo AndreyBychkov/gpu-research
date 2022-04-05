@@ -5,7 +5,7 @@ use std::time::Instant;
 
 static PTX: &str = include_str!("../../resources/kernels.ptx");
 
-pub fn matmul_gpu(lhs: &Vec<f32>, rhs: &Vec<f32>) -> Result<Vec<f32>, Box<dyn Error>> {
+pub(crate) fn matmul_gpu(lhs: &Vec<f32>, rhs: &Vec<f32>) -> Result<Vec<f32>, Box<dyn Error>> {
     let N2 = lhs.len();
     let N = (N2 as f32).sqrt().round() as usize;
 
@@ -19,20 +19,22 @@ pub fn matmul_gpu(lhs: &Vec<f32>, rhs: &Vec<f32>) -> Result<Vec<f32>, Box<dyn Er
     let mut out = vec![0.0f32; N2];
     let out_buf = out.as_slice().as_dbuf()?;
 
-    let func = module.get_function("matmul")?;
-    let (_, block_size) = func.suggested_launch_configuration(0, 0.into())?;
-
-    let grid_size = (N2 as u32 + block_size - 1) / block_size;
+    let func = module.get_function("matmul_tiled")?;
+    // let (_, block_size) = func.suggested_launch_configuration(0, 0.into())?;
+    let block_size = 32;
+    let grid_size = (N as u32 + block_size - 1) / block_size;
+    let dim_block = (block_size, block_size, 1);
+    let dim_grid = (grid_size, grid_size, 1);
 
     println!(
-        "using {} blocks and {} threads per block",
-        grid_size, block_size
+        "using {} blocks and {} threads per block ({} threads total)",
+        grid_size*grid_size, block_size*block_size, grid_size*grid_size*block_size*block_size
     );
 
     let start = Instant::now();
     unsafe {
         launch!(
-            func<<<grid_size, block_size, 0, stream>>>(
+            func<<<dim_grid, dim_block, 0, stream>>>(
                 lhs_gpu.as_device_ptr(),
                 lhs_gpu.len(),
                 rhs_gpu.as_device_ptr(),

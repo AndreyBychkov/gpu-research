@@ -1,3 +1,6 @@
+mod matmul_cpu;
+mod matmul_gpu;
+
 use cust::prelude::*;
 use nanorand::{Rng, WyRand};
 use std::error::Error;
@@ -6,7 +9,7 @@ use crate::matmul_gpu::matmul_gpu;
 use approx::*;
 use std::time::Instant;
 
-const N: usize = 100;
+const N: usize = 1024;
 const N2: usize = (N * N) as usize;
 
 static PTX: &str = include_str!("../../resources/kernels.ptx");
@@ -86,14 +89,14 @@ fn matmul_task() -> Result<(), Box<dyn Error>> {
     let mut rhs = vec![0.0f32; N2];
     wyrand.fill(&mut rhs);
 
-    let out_cpu = matmul_cpu(&lhs, &rhs);
+    // let out_cpu = matmul_cpu(&lhs, &rhs);
     let start = Instant::now();
     let out_gpu = matmul_gpu(&lhs, &rhs).expect("Problem with gpu code");
     let elapsed = start.elapsed();
     println!("{}s elapsed", elapsed.as_secs_f32());
-    for (c, g) in out_cpu.iter().zip(out_gpu.iter()) {
-        abs_diff_eq!(c, g);
-    }
+    // for (c, g) in out_cpu.iter().zip(out_gpu.iter()) {
+    //     abs_diff_eq!(c, g);
+    // }
     println!("Ok!");
     Ok(())
 }

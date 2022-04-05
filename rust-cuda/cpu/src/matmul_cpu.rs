@@ -1,7 +1,7 @@
 use rayon::prelude::*;
 use rayon::iter::{ParallelIterator, IntoParallelRefIterator};
 
-pub fn matmul_cpu(l: &Vec<f32>, r: &Vec<f32>) -> Vec<f32> {
+pub(crate) fn matmul_cpu(l: &Vec<f32>, r: &Vec<f32>) -> Vec<f32> {
     let mut res = vec![0.0; l.len()];
     let n = (l.len() as f32).sqrt().round() as usize;
 

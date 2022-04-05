@@ -1,10 +1,12 @@
-mod src;
-
 use cuda_builder::CudaBuilder;
 
 fn main() {
-    CudaBuilder::new("../gpu")
+    let result = CudaBuilder::new("../gpu")
         .copy_to("../resources/kernels.ptx")
-        .build()
-        .unwrap();
+        .release(true)
+        .build();
+    match result {
+        Ok(content) => {println!("All good")}
+        Err(error) => { println!("error: {}", error); panic!(); }
+    }
 }

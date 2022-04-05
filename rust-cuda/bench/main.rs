@@ -3,13 +3,9 @@
 use criterion::{criterion_group, criterion_main, Criterion, BenchmarkId, Throughput, black_box, Bencher};
 use std::time::Duration;
 use nanorand::{Rng, WyRand};
-use crate::matmul_cpu::matmul_gpu::matmul_gpu;
 
-#[path = "../cpu/src/mod.rs"]
-mod matmul_cpu;
 
-#[path = "../cpu/src/mod.rs"]
-mod matmul_gpu;
+
 
 
 const MEASUREMENT_SECS: u64 = 10;
