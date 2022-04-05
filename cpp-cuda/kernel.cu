@@ -162,7 +162,8 @@ cudaError_t matmul_gpu(const float *lhs, const float *rhs, float *out, unsigned 
     cudaDeviceSynchronize();
     clock_t end = clock();
     double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-    printf("time spent on naive kernel = %.6fs,\tPerf = %.6f Gflops\n", time_spent, 2.0*sqrt(n)*sqrt(n)*1e-9*sqrt(n)/time_spent);
+    printf("time spent on naive kernel = %.6fs,\tPerf = %.6f Gflops\n", 
+        time_spent, 2.0*sqrt(n)*sqrt(n)*1e-9*sqrt(n)/time_spent);
     cudaStatus = cudaGetLastError();
     if (cudaStatus != cudaSuccess) {
         fprintf(stderr, "matmul_kernel launch failed: %s\n", cudaGetErrorString(cudaStatus));
@@ -185,7 +186,8 @@ cudaError_t matmul_gpu(const float *lhs, const float *rhs, float *out, unsigned 
     cudaDeviceSynchronize();
     end = clock();
     time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-    printf("time spent on tiled kernel = %.6fs,\tPerf = %.6f Gflops\n", time_spent, 2.0*sqrt(n)*sqrt(n)*1e-9*sqrt(n)/time_spent);
+    printf("time spent on tiled kernel = %.6fs,\tPerf = %.6f Gflops\n", 
+        time_spent, 2.0*sqrt(n)*sqrt(n)*1e-9*sqrt(n)/time_spent);
     cudaStatus = cudaGetLastError();
     if (cudaStatus != cudaSuccess) {
         fprintf(stderr, "matmul_tiled_kernel launch failed: %s\n", cudaGetErrorString(cudaStatus));
